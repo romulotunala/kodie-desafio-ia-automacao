@@ -1,3 +1,5 @@
+import { setTimeout as sleep } from 'node:timers/promises';
+
 import { ApiError, GoogleGenAI } from '@google/genai';
 import { z } from 'zod';
 
@@ -7,6 +9,8 @@ import { logger } from './logger.js';
 
 /** First call + 1 retry when the model returns JSON outside the schema. */
 const MAX_ATTEMPTS = 2;
+/** Pause before retrying a transient provider failure (429, 5xx, network). */
+const TRANSIENT_RETRY_DELAY_MS = 1000;
 const DEFAULT_TEMPERATURE = 0.2;
 const JSON_MIME_TYPE = 'application/json';
 const HTTP_TOO_MANY_REQUESTS = 429;
@@ -36,8 +40,9 @@ type ParseOutcome<T> = { success: true; data: T } | { success: false; reason: st
  * Asks Gemini for a JSON response that matches `schema`.
  *
  * - Invalid output (empty, not JSON or outside the schema) is retried once, then 502.
- * - Timeout, network failure, quota or Gemini 5xx → 503. Other API errors
- *   (bad key, unknown model) are misconfiguration → 500.
+ * - Transient provider failures (quota, Gemini 5xx, network) are retried once after a
+ *   short pause, then 503. Timeouts are not retried.
+ * - Other API errors (bad key, unknown model) are misconfiguration → 500.
  * - `GEMINI_TIMEOUT_MS` is a deadline for the whole operation, retries included,
  *   so callers (n8n) have a predictable upper bound.
  */
@@ -52,7 +57,13 @@ export async function generateStructured<TSchema extends z.ZodType>({
   const responseJsonSchema = toGeminiJsonSchema(schema);
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    const text = await callModel({ system, user, temperature, responseJsonSchema, abortSignal });
+    const text = await callModelWithRetry({
+      system,
+      user,
+      temperature,
+      responseJsonSchema,
+      abortSignal,
+    });
     const outcome = parseResponse(text, schema);
 
     if (outcome.success) {
@@ -90,6 +101,32 @@ interface ModelCall {
   temperature: number;
   responseJsonSchema: Record<string, unknown>;
   abortSignal: AbortSignal;
+}
+
+/** Retries a transient provider failure once, within the same deadline. */
+async function callModelWithRetry(call: ModelCall): Promise<string | undefined> {
+  try {
+    return await callModel(call);
+  } catch (error) {
+    if (!isTransient(error, call.abortSignal)) {
+      throw error;
+    }
+    logger.warn({ reason: error.message }, 'Gemini temporarily unavailable, retrying');
+    await waitBeforeRetry(call.abortSignal);
+    return callModel(call);
+  }
+}
+
+function isTransient(error: unknown, abortSignal: AbortSignal): error is AppError {
+  return error instanceof AppError && error.code === 'AI_UNAVAILABLE' && !abortSignal.aborted;
+}
+
+async function waitBeforeRetry(abortSignal: AbortSignal): Promise<void> {
+  try {
+    await sleep(TRANSIENT_RETRY_DELAY_MS, undefined, { signal: abortSignal });
+  } catch (error) {
+    throw new AppError('AI_UNAVAILABLE', 'AI request timed out', { cause: error });
+  }
 }
 
 async function callModel(call: ModelCall): Promise<string | undefined> {

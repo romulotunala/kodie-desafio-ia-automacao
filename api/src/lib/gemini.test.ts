@@ -22,6 +22,9 @@ vi.mock('@google/genai', async (importOriginal) => {
   };
 });
 
+// Skips the pause before retrying a transient failure.
+vi.mock('node:timers/promises', () => ({ setTimeout: () => Promise.resolve() }));
+
 vi.mock('../config/env.js', () => ({
   env: {
     GEMINI_API_KEY: 'test-key',
@@ -137,15 +140,28 @@ describe('generateStructured', () => {
     ['quota exceeded (429)', new ApiError({ message: 'quota', status: 429 })],
     ['Gemini server error (503)', new ApiError({ message: 'overloaded', status: 503 })],
     ['network failure', new TypeError('fetch failed')],
-  ])('fails with AI_UNAVAILABLE (503) on %s', async (_label, cause) => {
-    generateContent.mockRejectedValueOnce(cause);
+  ])('retries once, then fails with AI_UNAVAILABLE (503) on %s', async (_label, cause) => {
+    generateContent.mockRejectedValue(cause);
 
     await expectAppError(generateStructured(request), 'AI_UNAVAILABLE');
+    expect(generateContent).toHaveBeenCalledTimes(2);
+  });
+
+  it('recovers when Gemini is overloaded only on the first call', async () => {
+    generateContent
+      .mockRejectedValueOnce(new ApiError({ message: 'overloaded', status: 503 }))
+      .mockResolvedValueOnce(reply({ label: 'a', score: 0.8 }));
+
+    const result = await generateStructured(request);
+
+    expect(result.data).toEqual({ label: 'a', score: 0.8 });
+    expect(generateContent).toHaveBeenCalledTimes(2);
   });
 
   it('fails with INTERNAL_ERROR (500) when Gemini rejects the request (e.g. bad key)', async () => {
     generateContent.mockRejectedValueOnce(new ApiError({ message: 'bad key', status: 403 }));
 
     await expectAppError(generateStructured(request), 'INTERNAL_ERROR');
+    expect(generateContent).toHaveBeenCalledTimes(1);
   });
 });

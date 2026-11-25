@@ -94,7 +94,7 @@ Adicionar um caso = criar a pasta + registrar a rota. Documentado em `docs/adici
   1. chama o modelo;
   2. `JSON.parse` + `schema.safeParse`;
   3. inválido → **1 retry**; falhou de novo → `AppError(502, "AI_INVALID_RESPONSE")`;
-  4. timeout (`GEMINI_TIMEOUT_MS`); erro de rede/quota → `AppError(503, "AI_UNAVAILABLE")`;
+  4. timeout (`GEMINI_TIMEOUT_MS`, prazo da operação inteira); erro temporário (rede, quota 429, Gemini 5xx) → **1 retry** após 1 s; falhou de novo → `AppError(503, "AI_UNAVAILABLE")`;
   5. retorna `{ data, model, latency_ms }`.
 - Nos testes, `lib/gemini.ts` é sempre mockado.
 
