@@ -17,12 +17,12 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 ## Checklist
 
 ### Bloco A — Fundação do repositório
-- [ ] `.nvmrc` com `24`
-- [ ] Estrutura de pastas conforme `01-arquitetura.md`
-- [ ] `.gitignore`, `.env.example`, `.editorconfig`
-- [ ] `api/`: `package.json` (npm, `"engines": { "node": ">=24" }`), `tsconfig.json` (strict), scripts `dev` (tsx watch), `build` (tsc), `start`, `test`, `lint`, `typecheck` (`tsc --noEmit`), `format`
-- [ ] ESLint (`typescript-eslint`, regras que reforcem os itens Sonar do `CLAUDE.md`) + Prettier
-- [ ] `config/env.ts` validando variáveis com Zod (falha rápido e com mensagem clara se faltar `GEMINI_API_KEY`)
+- [x] `.nvmrc` com `24`
+- [x] Estrutura de pastas conforme `01-arquitetura.md`
+- [x] `.gitignore`, `.env.example`, `.editorconfig`
+- [x] `api/`: `package.json` (npm, `"engines": { "node": ">=24" }`), `tsconfig.json` (strict), scripts `dev` (tsx watch), `build` (tsc), `start`, `test`, `lint`, `typecheck` (`tsc --noEmit`), `format`
+- [x] ESLint (`typescript-eslint`, regras que reforcem os itens Sonar do `CLAUDE.md`) + Prettier
+- [x] `config/env.ts` validando variáveis com Zod (falha rápido e com mensagem clara se faltar `GEMINI_API_KEY`)
 
 ### Bloco B — Esqueleto da API
 - [ ] `app.ts` (Express, `express.json` com limite, helmet, pino-http) e `server.ts`

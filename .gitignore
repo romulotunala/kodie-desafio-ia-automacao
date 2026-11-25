@@ -1,0 +1,21 @@
+# Dependencies and build output
+node_modules/
+dist/
+.next/
+coverage/
+*.tsbuildinfo
+
+# Environment (secrets)
+.env
+.env.*
+!.env.example
+
+# n8n local data (stores Google credentials)
+n8n_data/
+.n8n/
+*.sqlite
+
+# Logs and OS files
+*.log
+npm-debug.log*
+.DS_Store
