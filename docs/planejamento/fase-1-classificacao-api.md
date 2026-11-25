@@ -33,8 +33,8 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 - [x] Teste: `/health` responde 200
 
 ### Bloco C — Integração com Gemini
-- [ ] `lib/gemini.ts` com `generateStructured<T>()` (saída JSON + schema, validação Zod, 1 retry, timeout, mapeamento de erros 502/503)
-- [ ] Testes unitários com o SDK mockado: sucesso · JSON inválido → retry → sucesso · falha dupla → 502 · timeout → 503
+- [x] `lib/gemini.ts` com `generateStructured<T>()` (saída JSON + schema, validação Zod, 1 retry, timeout, mapeamento de erros 502/503)
+- [x] Testes unitários com o SDK mockado: sucesso · JSON inválido → retry → sucesso · falha dupla → 502 · timeout → 503
 
 ### Bloco D — Módulo `classify`
 - [ ] `classify.constants.ts` (enums e limites)

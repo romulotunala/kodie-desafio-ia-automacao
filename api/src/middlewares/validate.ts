@@ -23,7 +23,9 @@ export function validate<TSchema extends z.ZodType>(
 
     if (!result.success) {
       next(
-        new AppError('VALIDATION_ERROR', 'Request body is invalid', toErrorDetails(result.error)),
+        new AppError('VALIDATION_ERROR', 'Request body is invalid', {
+          details: toErrorDetails(result.error),
+        }),
       );
       return;
     }

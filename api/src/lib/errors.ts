@@ -41,17 +41,26 @@ export const ErrorResponseSchema = z
 
 type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
 
+interface AppErrorOptions {
+  /** Field-level problems returned to the client (e.g. validation issues). */
+  details?: readonly ErrorDetail[];
+  /** Original error, logged but never sent to the client. */
+  cause?: unknown;
+}
+
 export class AppError extends Error {
   override readonly name = 'AppError';
   readonly status: number;
+  readonly details: readonly ErrorDetail[];
 
   constructor(
     readonly code: ErrorCode,
     message: string,
-    readonly details: readonly ErrorDetail[] = [],
+    options: AppErrorOptions = {},
   ) {
-    super(message);
+    super(message, { cause: options.cause });
     this.status = ERROR_STATUS[code];
+    this.details = options.details ?? [];
   }
 }
 
