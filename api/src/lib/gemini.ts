@@ -49,7 +49,7 @@ export async function generateStructured<TSchema extends z.ZodType>({
 }: StructuredRequest<TSchema>): Promise<StructuredResult<z.output<TSchema>>> {
   const startedAt = performance.now();
   const abortSignal = AbortSignal.timeout(env.GEMINI_TIMEOUT_MS);
-  const responseJsonSchema = z.toJSONSchema(schema, { io: 'output' });
+  const responseJsonSchema = toGeminiJsonSchema(schema);
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     const text = await callModel({ system, user, temperature, responseJsonSchema, abortSignal });
@@ -70,11 +70,25 @@ export async function generateStructured<TSchema extends z.ZodType>({
   throw new AppError('AI_INVALID_RESPONSE', 'AI returned a response outside the expected format');
 }
 
+/**
+ * JSON Schema for `responseJsonSchema`, limited to what Gemini supports.
+ * An empty metadata registry drops Swagger metadata (`id` would wrap the schema in
+ * `$ref`/`$defs`; descriptions and examples are for humans), and `$schema` is not
+ * a supported keyword.
+ */
+function toGeminiJsonSchema(schema: z.ZodType): Record<string, unknown> {
+  const jsonSchema: Record<string, unknown> = {
+    ...z.toJSONSchema(schema, { io: 'output', metadata: z.registry() }),
+  };
+  delete jsonSchema.$schema;
+  return jsonSchema;
+}
+
 interface ModelCall {
   system: string;
   user: string;
   temperature: number;
-  responseJsonSchema: unknown;
+  responseJsonSchema: Record<string, unknown>;
   abortSignal: AbortSignal;
 }
 

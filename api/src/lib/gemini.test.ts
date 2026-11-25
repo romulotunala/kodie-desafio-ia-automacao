@@ -89,6 +89,17 @@ describe('generateStructured', () => {
     });
   });
 
+  it('strips Swagger metadata and $schema from the JSON Schema sent to Gemini', async () => {
+    generateContent.mockResolvedValueOnce(reply({ label: 'a', score: 0.9 }));
+    const documented = Schema.meta({ id: 'Documented', description: 'for Swagger only' });
+
+    await generateStructured({ ...request, schema: documented });
+
+    const sent = generateContent.mock.calls[0]?.[0].config?.responseJsonSchema;
+    expect(sent).toMatchObject({ type: 'object' });
+    expect(JSON.stringify(sent)).not.toMatch(/\$ref|\$defs|\$schema|for Swagger only/);
+  });
+
   it('retries once when the first response is not valid JSON', async () => {
     generateContent
       .mockResolvedValueOnce({ text: 'not json' })

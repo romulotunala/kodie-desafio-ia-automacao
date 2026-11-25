@@ -4,6 +4,8 @@ import { pinoHttp } from 'pino-http';
 
 import { errorHandler, notFoundHandler } from './lib/errors.js';
 import { logger } from './lib/logger.js';
+import { API_PREFIX } from './lib/openapi.js';
+import { apiRouter } from './routes/api.router.js';
 import { createDocsRouter } from './routes/docs.route.js';
 import { healthRouter } from './routes/health.route.js';
 
@@ -21,6 +23,7 @@ export function createApp(): Express {
   app.use(express.json({ limit: JSON_BODY_LIMIT }));
 
   app.use(healthRouter);
+  app.use(API_PREFIX, apiRouter);
   // Docs last among routers: the OpenAPI document is built from what is registered so far.
   app.use(createDocsRouter());
 

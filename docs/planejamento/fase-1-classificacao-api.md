@@ -37,9 +37,9 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 - [x] Testes unitários com o SDK mockado: sucesso · JSON inválido → retry → sucesso · falha dupla → 502 · timeout → 503
 
 ### Bloco D — Módulo `classify`
-- [ ] `classify.constants.ts` (enums e limites)
-- [ ] `classify.schema.ts` (contrato da arquitetura, com descrições e exemplos para o Swagger)
-- [ ] `classify.prompt.ts` — system prompt estruturado com:
+- [x] `classify.constants.ts` (enums e limites)
+- [x] `classify.schema.ts` (contrato da arquitetura, com descrições e exemplos para o Swagger)
+- [x] `classify.prompt.ts` — system prompt estruturado com:
   - papel ("triage assistant for Loja Aurora")
   - definição de cada categoria e setor
   - regras de urgência e sentimento
@@ -47,9 +47,9 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
   - instrução explícita: textos livres (`summary`, `keywords`, `rationale`) em português do Brasil
   - 2–3 exemplos few-shot
   - mensagens ambíguas/spam → `other`, confiança baixa
-- [ ] `classify.service.ts` e `classify.route.ts` (`POST /api/v1/classify`), registrado no Swagger
-- [ ] Testes de rota (Supertest, Gemini mockado): 200 com envelope correto · 400 em entrada inválida · 502 quando a IA falha
-- [ ] `api/samples/messages.json` com ~12 mensagens realistas (em português) cobrindo todas as categorias, setores e urgências
+- [x] `classify.service.ts` e `classify.route.ts` (`POST /api/v1/classify`), registrado no Swagger
+- [x] Testes de rota (Supertest, Gemini mockado): 200 com envelope correto · 400 em entrada inválida · 502 quando a IA falha
+- [x] `api/samples/messages.json` com ~12 mensagens realistas (em português) cobrindo todas as categorias, setores e urgências
 - [ ] Teste manual real (com chave) via Swagger; registrar no README um exemplo de requisição/resposta
 
 ### Bloco E — Docker
