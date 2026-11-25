@@ -25,12 +25,12 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 - [x] `config/env.ts` validando variáveis com Zod (falha rápido e com mensagem clara se faltar `GEMINI_API_KEY`)
 
 ### Bloco B — Esqueleto da API
-- [ ] `app.ts` (Express, `express.json` com limite, helmet, pino-http) e `server.ts`
-- [ ] `GET /health`
-- [ ] Middleware de validação Zod (`validate(schema)`)
-- [ ] `AppError` + middleware de erro com o envelope padrão + 404
-- [ ] Swagger: registry OpenAPI a partir do Zod, `GET /docs` (UI) e `GET /docs.json`
-- [ ] Teste: `/health` responde 200
+- [x] `app.ts` (Express, `express.json` com limite, helmet, pino-http) e `server.ts`
+- [x] `GET /health`
+- [x] Middleware de validação Zod (`validate(schema)`)
+- [x] `AppError` + middleware de erro com o envelope padrão + 404
+- [x] Swagger: registry OpenAPI a partir do Zod, `GET /docs` (UI) e `GET /docs.json`
+- [x] Teste: `/health` responde 200
 
 ### Bloco C — Integração com Gemini
 - [ ] `lib/gemini.ts` com `generateStructured<T>()` (saída JSON + schema, validação Zod, 1 retry, timeout, mapeamento de erros 502/503)

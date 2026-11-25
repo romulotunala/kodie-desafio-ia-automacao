@@ -127,6 +127,7 @@ Adicionar um caso = criar a pasta + registrar a rota. Documentado em `docs/adici
 |---|---|---|
 | 400 | `VALIDATION_ERROR` | Entrada inválida (detalhes do Zod) |
 | 404 | `NOT_FOUND` | Rota inexistente |
+| 413 | `PAYLOAD_TOO_LARGE` | Corpo da requisição acima do limite (32 kb) |
 | 502 | `AI_INVALID_RESPONSE` | Gemini devolveu JSON fora do schema após retry |
 | 503 | `AI_UNAVAILABLE` | Erro de rede, timeout ou quota no Gemini |
 | 500 | `INTERNAL_ERROR` | Qualquer outro erro |
