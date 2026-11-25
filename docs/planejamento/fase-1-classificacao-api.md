@@ -53,9 +53,9 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 - [ ] Teste manual real (com chave) via Swagger; registrar no README um exemplo de requisição/resposta
 
 ### Bloco E — Docker
-- [ ] `api/Dockerfile` multi-stage (`node:24-alpine`, `npm ci`), usuário não-root, `.dockerignore`
-- [ ] `docker-compose.yml` com `api` + `n8n` (volume nomeado, timezone, encryption key, healthcheck da API)
-- [ ] `docker compose up --build` sobe tudo; `curl localhost:3000/health` ok; n8n abre em `localhost:5678`
+- [x] `api/Dockerfile` multi-stage (`node:24-alpine`, `npm ci`), usuário não-root, `.dockerignore`
+- [x] `docker-compose.yml` com `api` + `n8n` (volume nomeado, timezone, encryption key, healthcheck da API)
+- [x] `docker compose up --build` sobe tudo; `curl localhost:3000/health` ok; n8n abre em `localhost:5678`
 
 ### Bloco F — n8n + Google Sheets (parte manual do usuário, com apoio do Claude Code)
 - [ ] Usuário cria a planilha e a aba `classificacoes` com os cabeçalhos da arquitetura
