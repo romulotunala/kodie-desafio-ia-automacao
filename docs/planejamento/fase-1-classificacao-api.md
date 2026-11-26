@@ -81,9 +81,9 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 - [x] Placeholders de imagem no README apontando para `docs/prints/fase-1/`
 
 ### Bloco H — Prints (usuário) e fechamento
-- [ ] Usuário captura os prints da lista abaixo
-- [ ] Revisão final contra o checklist de `00-desafio.md`
-- [ ] Conferir que não há segredos no repositório (`git grep -iE "api_key|secret|token"`)
+- [x] Usuário captura os prints da lista abaixo
+- [x] Revisão final contra o checklist de `00-desafio.md`
+- [x] Conferir que não há segredos no repositório (`git grep -iE "api_key|secret|token"`)
 - [ ] Claude Code apresenta o resumo da fase e sugere título/descrição do PR; **o usuário** faz commit, push, PR, merge e tag `v1.0.0`
 
 ## Prints a capturar (salvar em `docs/prints/fase-1/`)
@@ -94,7 +94,7 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 | `02-node-webhook.png` | Configuração do Webhook (método, path, modo de resposta) |
 | `03-node-edit-fields.png` | Configuração do Edit Fields de entrada |
 | `04-node-http-request.png` | Configuração do HTTP Request (URL, método, body) |
-| `05-node-traducao.png` | Edit Fields que traduz enums para rótulos PT |
+| `05a-node-traducao.png` / `05b-node-traducao.png` | Edit Fields que traduz enums para rótulos PT (dois prints: 10 campos) |
 | `06-node-google-sheets.png` | Configuração do Sheets (planilha, aba, mapeamento de colunas) |
 | `07-node-respond.png` | Configuração do Respond to Webhook |
 | `08-execucao-sucesso.png` | Execução concluída com sucesso (todos os nodes verdes) |
@@ -104,7 +104,7 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 | `12-swagger.png` | Swagger com uma requisição e resposta reais |
 | `13-node-if-sucesso.png` | IF que separa a resposta 200 dos erros da API (ramo de erro) |
 | `14-node-switch.png` | Switch por urgência (saídas `Alta` e `Outras`) |
-| `15-node-respond-erro.png` | Respond to Webhook do ramo de erro (status e corpo da API) |
+| `15-node-respond-erro.png` | Respond to Webhook do ramo de erro, com uma execução real de 400 |
 | `16-planilha-urgentes.png` | Aba `urgentes` com as mensagens de urgência alta |
 
 ## Critérios de aceite

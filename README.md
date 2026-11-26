@@ -311,7 +311,9 @@ Do webhook à resposta: o ramo de cima é o caminho de sucesso (traduz, grava e 
 
 **Traduz para PT (Edit Fields):** transforma os valores do contrato (em inglês) nos rótulos da planilha (em português).
 
-![Configuração do node Traduz para PT](docs/prints/fase-1/05-node-traducao.png)
+![Configuração do node Traduz para PT (campos 1 a 7)](docs/prints/fase-1/05a-node-traducao.png)
+
+![Configuração do node Traduz para PT (campos 4 a 10)](docs/prints/fase-1/05b-node-traducao.png)
 
 **Registra na planilha (Google Sheets):** acrescenta a linha na aba `classificacoes`, mapeando as colunas pelo nome.
 
@@ -321,11 +323,13 @@ Do webhook à resposta: o ramo de cima é o caminho de sucesso (traduz, grava e 
 
 ![Configuração do node Switch](docs/prints/fase-1/14-node-switch.png)
 
-**Responde sucesso / Responde erro (Respond to Webhook):** devolvem a quem chamou o JSON da API, ou o erro com o mesmo status.
+**Responde sucesso (Respond to Webhook):** devolve a quem chamou o JSON completo da API, com status 200.
 
 ![Configuração do node Respond to Webhook](docs/prints/fase-1/07-node-respond.png)
 
-![Configuração do node Responde erro](docs/prints/fase-1/15-node-respond-erro.png)
+**Responde erro (Respond to Webhook):** devolve o erro da API com o mesmo status. No print, uma execução real do ramo de erro: a mensagem "oi" tem menos de 5 caracteres, a API responde 400 `VALIDATION_ERROR` e o fluxo repassa esse erro sem gravar na planilha.
+
+![Configuração e execução do node Responde erro](docs/prints/fase-1/15-node-respond-erro.png)
 
 ### Execução e resultados
 
@@ -341,7 +345,7 @@ Do webhook à resposta: o ramo de cima é o caminho de sucesso (traduz, grava e 
 
 ![Dados recebidos pelo node do Google Sheets](docs/prints/fase-1/10-dados-sheets.png)
 
-**Planilha preenchida:** as 14 mensagens de exemplo classificadas, e as de urgência alta na aba `urgentes`.
+**Planilha preenchida:** as mensagens de exemplo classificadas, e as de urgência alta copiadas para a aba `urgentes`.
 
 ![Aba classificacoes preenchida](docs/prints/fase-1/11-planilha.png)
 
