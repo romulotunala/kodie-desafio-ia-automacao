@@ -58,13 +58,13 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 - [x] `docker compose up --build` sobe tudo; `curl localhost:3000/health` ok; n8n abre em `localhost:5678`
 
 ### Bloco F — n8n + Google Sheets (parte manual do usuário, com apoio do Claude Code)
-- [ ] Usuário cria a planilha e a aba `classificacoes` com os cabeçalhos da arquitetura
-- [ ] Usuário configura a credencial Google Sheets no n8n (`docs/guias/google-sheets-n8n.md`)
-- [ ] Claude Code gera um rascunho de `n8n/workflows/4.1-classify.json` para importar:
+- [x] Usuário cria a planilha e a aba `classificacoes` com os cabeçalhos da arquitetura
+- [x] Usuário configura a credencial Google Sheets no n8n (`docs/guias/google-sheets-n8n.md`)
+- [x] Claude Code gera um rascunho de `n8n/workflows/4.1-classify.json` para importar:
   Webhook `POST /webhook/classify` → Edit Fields → HTTP Request `http://api:3000/api/v1/classify` → Edit Fields (enums → rótulos PT) → Google Sheets (Append Row) → Respond to Webhook, com ramo de erro
-- [ ] Usuário importa, liga a credencial, testa, **ativa** o workflow e reexporta o JSON final para `n8n/workflows/`
-- [ ] (Opcional) Switch por `urgency` para destacar mensagens de urgência alta
-- [ ] `scripts/send-samples.sh` (ou `.ts`) que envia `api/samples/messages.json` ao webhook — popula a planilha antes dos prints
+- [x] Usuário importa, liga a credencial, testa, **ativa** o workflow e reexporta o JSON final para `n8n/workflows/`
+- [x] (Opcional) Switch por `urgency` para destacar mensagens de urgência alta
+- [x] `scripts/send-samples.sh` (ou `.ts`) que envia `api/samples/messages.json` ao webhook — popula a planilha antes dos prints
 
 ### Bloco G — Documentação
 - [ ] `README.md` com as 6 seções obrigatórias (ver `00-desafio.md`) + extras:

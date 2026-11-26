@@ -203,6 +203,8 @@ Planilha "Loja Aurora — Atendimento", uma aba por caso, cabeçalhos em portugu
 
 `recebido_em | cliente | canal | mensagem | categoria | setor | urgencia | sentimento | resumo | confianca`
 
+Aba `urgentes` (Fase 1, Switch por urgência): mesmos cabeçalhos; recebe também as mensagens com `urgency = high`, para a equipe priorizar.
+
 ## Docker
 
 | Serviço | Imagem/Build | Porta host | Observações |

@@ -11,7 +11,8 @@ As telas do Google Cloud mudam de tempos em tempos; se algum nome estiver difere
 1. No Google Sheets, crie a planilha **"Loja Aurora — Atendimento"**.
 2. Renomeie a primeira aba para `classificacoes` e coloque na linha 1 os cabeçalhos:
    `recebido_em | cliente | canal | mensagem | categoria | setor | urgencia | sentimento | resumo | confianca`
-3. (Fases opcionais) Crie depois as abas `resumos`, `tarefas`, `faq`, `faq_pendentes`.
+3. Crie a aba `urgentes` com os **mesmos cabeçalhos** (recebe as mensagens de urgência alta).
+4. (Fases opcionais) Crie depois as abas `resumos`, `tarefas`, `faq`, `faq_pendentes`.
 
 ## 2. Projeto no Google Cloud
 

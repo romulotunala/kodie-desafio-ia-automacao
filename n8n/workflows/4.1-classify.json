@@ -1,0 +1,660 @@
+{
+  "name": "4.1 — Classificação de mensagens",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "classify",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "588b64c3-270e-4a60-8d64-51871f6a0124",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        976,
+        720
+      ],
+      "webhookId": "5d2f8a3c-6b7e-4f10-8c9d-2a1b3c4d5e01"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1f0e6b2-1c3d-4e5f-8a9b-0c1d2e3f4a01",
+              "name": "message",
+              "value": "={{ $json.body.message ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "a1f0e6b2-1c3d-4e5f-8a9b-0c1d2e3f4a02",
+              "name": "customer",
+              "value": "={{ $json.body.customer ?? '' }}",
+              "type": "string"
+            },
+            {
+              "id": "a1f0e6b2-1c3d-4e5f-8a9b-0c1d2e3f4a03",
+              "name": "channel",
+              "value": "={{ $json.body.channel ?? 'other' }}",
+              "type": "string"
+            },
+            {
+              "id": "a1f0e6b2-1c3d-4e5f-8a9b-0c1d2e3f4a04",
+              "name": "received_at",
+              "value": "={{ $now.toFormat('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ea265e91-b23b-4993-a5a4-1eded6c65b06",
+      "name": "Normaliza entrada",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:3000/api/v1/classify",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ message: $json.message, customer: $json.customer, channel: $json.channel }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "f8160f41-d019-4c05-941c-975d61f5a162",
+      "name": "Classifica (API)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1424,
+        720
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c3d4e5f6-0a1b-4c2d-9e3f-4a5b6c7d8e01",
+              "leftValue": "={{ $json.statusCode }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "753ffe14-11d7-4fe3-b05e-bd45aa41fe06",
+      "name": "Sucesso?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1632,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b2e1f7c3-2d4e-4f6a-9b0c-1d2e3f4a5b01",
+              "name": "recebido_em",
+              "value": "={{ $('Normaliza entrada').item.json.received_at }}",
+              "type": "string"
+            },
+            {
+              "id": "b2e1f7c3-2d4e-4f6a-9b0c-1d2e3f4a5b02",
+              "name": "cliente",
+              "value": "={{ $json.body.input.customer || 'Não informado' }}",
+              "type": "string"
+            },
+            {
+              "id": "b2e1f7c3-2d4e-4f6a-9b0c-1d2e3f4a5b03",
+              "name": "canal",
+              "value": "={{ ({ email: 'E-mail', whatsapp: 'WhatsApp', website: 'Site', phone: 'Telefone', other: 'Outro' })[$json.body.input.channel] }}",
+              "type": "string"
+            },
+            {
+              "id": "b2e1f7c3-2d4e-4f6a-9b0c-1d2e3f4a5b04",
+              "name": "mensagem",
+              "value": "={{ $json.body.input.message }}",
+              "type": "string"
+            },
+            {
+              "id": "b2e1f7c3-2d4e-4f6a-9b0c-1d2e3f4a5b05",
+              "name": "categoria",
+              "value": "={{ ({ question: 'Dúvida', complaint: 'Reclamação', request: 'Solicitação', compliment: 'Elogio', other: 'Outro' })[$json.body.result.category] }}",
+              "type": "string"
+            },
+            {
+              "id": "b2e1f7c3-2d4e-4f6a-9b0c-1d2e3f4a5b06",
+              "name": "setor",
+              "value": "={{ ({ customer_service: 'Atendimento', finance: 'Financeiro', logistics: 'Logística', tech_support: 'Suporte técnico', sales: 'Comercial' })[$json.body.result.department] }}",
+              "type": "string"
+            },
+            {
+              "id": "b2e1f7c3-2d4e-4f6a-9b0c-1d2e3f4a5b07",
+              "name": "urgencia",
+              "value": "={{ ({ low: 'Baixa', medium: 'Média', high: 'Alta' })[$json.body.result.urgency] }}",
+              "type": "string"
+            },
+            {
+              "id": "b2e1f7c3-2d4e-4f6a-9b0c-1d2e3f4a5b08",
+              "name": "sentimento",
+              "value": "={{ ({ positive: 'Positivo', neutral: 'Neutro', negative: 'Negativo' })[$json.body.result.sentiment] }}",
+              "type": "string"
+            },
+            {
+              "id": "b2e1f7c3-2d4e-4f6a-9b0c-1d2e3f4a5b09",
+              "name": "resumo",
+              "value": "={{ $json.body.result.summary }}",
+              "type": "string"
+            },
+            {
+              "id": "b2e1f7c3-2d4e-4f6a-9b0c-1d2e3f4a5b10",
+              "name": "confianca",
+              "value": "={{ $json.body.result.confidence }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bbfd39bc-257a-498d-aeb2-0169ded90c3e",
+      "name": "Traduz para PT",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1856,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1n8Mlne6lLhYxXJU7qSSdw_IEauROMJvnmeEOxLZVhTU",
+          "mode": "list",
+          "cachedResultName": "Loja Aurora — Atendimento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1n8Mlne6lLhYxXJU7qSSdw_IEauROMJvnmeEOxLZVhTU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "classificacoes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1n8Mlne6lLhYxXJU7qSSdw_IEauROMJvnmeEOxLZVhTU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "recebido_em",
+              "displayName": "recebido_em",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente",
+              "displayName": "cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "categoria",
+              "displayName": "categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "setor",
+              "displayName": "setor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "urgencia",
+              "displayName": "urgencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sentimento",
+              "displayName": "sentimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "resumo",
+              "displayName": "resumo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "confianca",
+              "displayName": "confianca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "5a83cc67-802d-4029-a33f-67513acf6977",
+      "name": "Registra na planilha",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2080,
+        624
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AYnOFkYMxgtwHwLY",
+          "name": "Google Sheets - Loja Aurora"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d4e5f6a7-1b2c-4d3e-8f4a-5b6c7d8e9f01",
+                    "leftValue": "={{ $('Classifica (API)').item.json.body.result.urgency }}",
+                    "rightValue": "high",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Alta"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Outras"
+        }
+      },
+      "id": "b43d7bb9-47f3-4ba8-962d-624b8e2fddc7",
+      "name": "Urgência alta?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2304,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1n8Mlne6lLhYxXJU7qSSdw_IEauROMJvnmeEOxLZVhTU",
+          "mode": "list",
+          "cachedResultName": "Loja Aurora — Atendimento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1n8Mlne6lLhYxXJU7qSSdw_IEauROMJvnmeEOxLZVhTU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "urgentes",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "recebido_em",
+              "displayName": "recebido_em",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente",
+              "displayName": "cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mensagem",
+              "displayName": "mensagem",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "categoria",
+              "displayName": "categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "setor",
+              "displayName": "setor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "urgencia",
+              "displayName": "urgencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sentimento",
+              "displayName": "sentimento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "resumo",
+              "displayName": "resumo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "confianca",
+              "displayName": "confianca",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "11fbcc80-6fd0-445c-b33b-85b43b716518",
+      "name": "Registra urgente",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2528,
+        528
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AYnOFkYMxgtwHwLY",
+          "name": "Google Sheets - Loja Aurora"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($('Classifica (API)').item.json.body) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "9eae83a0-14eb-44ed-8299-1a8e25928400",
+      "name": "Responde sucesso",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2752,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.body ?? { error: { code: 'API_UNREACHABLE', message: 'Classification API is unreachable' } }) }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode ?? 502 }}"
+        }
+      },
+      "id": "916a1c34-9d18-43e0-a087-a7dcf55bb262",
+      "name": "Responde erro",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1856,
+        832
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normaliza entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normaliza entrada": {
+      "main": [
+        [
+          {
+            "node": "Classifica (API)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classifica (API)": {
+      "main": [
+        [
+          {
+            "node": "Sucesso?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sucesso?": {
+      "main": [
+        [
+          {
+            "node": "Traduz para PT",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responde erro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Traduz para PT": {
+      "main": [
+        [
+          {
+            "node": "Registra na planilha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registra na planilha": {
+      "main": [
+        [
+          {
+            "node": "Urgência alta?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Urgência alta?": {
+      "main": [
+        [
+          {
+            "node": "Registra urgente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responde sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registra urgente": {
+      "main": [
+        [
+          {
+            "node": "Responde sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "491e707b-fd80-4941-9f92-f8c5a10ddb4d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2fb4c6f0df356959e37b65b94728172886345e1f5b31ec8340255078029bbe11"
+  },
+  "nodeGroups": [],
+  "id": "IXaP6qmM1r5cADDT",
+  "tags": []
+}
