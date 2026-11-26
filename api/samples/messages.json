@@ -1,0 +1,70 @@
+[
+  {
+    "message": "Comprei um tênis há 10 dias e ainda não chegou. Já é a segunda vez que isso acontece! Se não resolverem até sexta, vou registrar no Reclame Aqui.",
+    "customer": "Maria Souza",
+    "channel": "whatsapp"
+  },
+  {
+    "message": "Fui cobrada duas vezes no cartão pelo mesmo pedido (#5530). Preciso do estorno de uma das cobranças o quanto antes.",
+    "customer": "Juliana Prado",
+    "channel": "email"
+  },
+  {
+    "message": "Não consigo finalizar a compra: o site dá erro na etapa de pagamento e volta para o carrinho. Já tentei em dois navegadores.",
+    "customer": "Carlos Mendes",
+    "channel": "website"
+  },
+  {
+    "message": "A camiseta que recebi veio no tamanho M, mas pedi G. Gostaria de trocar pelo tamanho certo, como faço?",
+    "customer": "Fernanda Lima",
+    "channel": "email"
+  },
+  {
+    "message": "Cancelei o pedido #4410 no mesmo dia da compra e até agora o reembolso do Pix não caiu. Podem verificar?",
+    "customer": "Rafael Costa",
+    "channel": "whatsapp"
+  },
+  {
+    "message": "Esqueci minha senha e o e-mail de redefinição não chega. Podem me ajudar a acessar minha conta?",
+    "customer": "Beatriz Alves",
+    "channel": "phone"
+  },
+  {
+    "message": "Somos uma academia e queremos um orçamento para 60 camisetas personalizadas com o nosso logo. Vocês fazem pedidos corporativos?",
+    "customer": "Academia Movimento",
+    "channel": "email"
+  },
+  {
+    "message": "Vocês entregam em Porto Velho? Qual é o prazo médio para Rondônia?",
+    "customer": "Lucas Ferreira",
+    "channel": "website"
+  },
+  {
+    "message": "É possível parcelar em 6 vezes sem juros no cartão? E no Pix tem desconto?",
+    "channel": "website"
+  },
+  {
+    "message": "Quero parabenizar a equipe! A entrega chegou antes do prazo e o atendente do chat foi super atencioso. Com certeza vou comprar de novo.",
+    "customer": "Patrícia Rocha",
+    "channel": "whatsapp"
+  },
+  {
+    "message": "Tenho uma loja em Curitiba e gostaria de saber se vocês têm programa de revenda ou parceria para lojistas.",
+    "customer": "Eduardo Nunes",
+    "channel": "email"
+  },
+  {
+    "message": "PARABÉNS! Você foi selecionado para ganhar um iPhone. Clique no link e informe seus dados para receber o prêmio!!!",
+    "channel": "email"
+  },
+  {
+    "message": "Oi, tudo bem? Então, sobre aquilo que eu falei antes...",
+    "customer": "Ana",
+    "channel": "whatsapp"
+  },
+  {
+    "message": "Terceira vez que meu pedido chega com produto errado. Péssimo! Quero cancelar tudo e o meu dinheiro de volta, senão vou ao Procon.",
+    "customer": "Roberto Dias",
+    "channel": "phone"
+  }
+]

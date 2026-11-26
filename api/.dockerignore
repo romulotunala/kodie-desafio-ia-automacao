@@ -1,0 +1,10 @@
+# Only package*.json, tsconfig*.json and src/ are needed to build the image.
+node_modules
+dist
+coverage
+samples
+*.log
+
+# Never send secrets to the build context.
+.env
+.env.*

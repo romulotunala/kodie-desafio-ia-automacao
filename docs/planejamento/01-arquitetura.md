@@ -94,7 +94,7 @@ Adicionar um caso = criar a pasta + registrar a rota. Documentado em `docs/adici
   1. chama o modelo;
   2. `JSON.parse` + `schema.safeParse`;
   3. inválido → **1 retry**; falhou de novo → `AppError(502, "AI_INVALID_RESPONSE")`;
-  4. timeout (`GEMINI_TIMEOUT_MS`); erro de rede/quota → `AppError(503, "AI_UNAVAILABLE")`;
+  4. timeout (`GEMINI_TIMEOUT_MS`, prazo da operação inteira); erro temporário (rede, quota 429, Gemini 5xx) → **1 retry** após 1 s; falhou de novo → `AppError(503, "AI_UNAVAILABLE")`;
   5. retorna `{ data, model, latency_ms }`.
 - Nos testes, `lib/gemini.ts` é sempre mockado.
 
@@ -127,6 +127,7 @@ Adicionar um caso = criar a pasta + registrar a rota. Documentado em `docs/adici
 |---|---|---|
 | 400 | `VALIDATION_ERROR` | Entrada inválida (detalhes do Zod) |
 | 404 | `NOT_FOUND` | Rota inexistente |
+| 413 | `PAYLOAD_TOO_LARGE` | Corpo da requisição acima do limite (32 kb) |
 | 502 | `AI_INVALID_RESPONSE` | Gemini devolveu JSON fora do schema após retry |
 | 503 | `AI_UNAVAILABLE` | Erro de rede, timeout ou quota no Gemini |
 | 500 | `INTERNAL_ERROR` | Qualquer outro erro |
@@ -202,6 +203,8 @@ Planilha "Loja Aurora — Atendimento", uma aba por caso, cabeçalhos em portugu
 
 `recebido_em | cliente | canal | mensagem | categoria | setor | urgencia | sentimento | resumo | confianca`
 
+Aba `urgentes` (Fase 1, Switch por urgência): mesmos cabeçalhos; recebe também as mensagens com `urgency = high`, para a equipe priorizar.
+
 ## Docker
 
 | Serviço | Imagem/Build | Porta host | Observações |
@@ -217,7 +220,7 @@ Planilha "Loja Aurora — Atendimento", uma aba por caso, cabeçalhos em portugu
 PORT=3000
 NODE_ENV=development
 GEMINI_API_KEY=your-key-here
-GEMINI_MODEL=model-name
+GEMINI_MODEL=gemini-3.5-flash-lite
 GEMINI_TIMEOUT_MS=20000
 LOG_LEVEL=info
 

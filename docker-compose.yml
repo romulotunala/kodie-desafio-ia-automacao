@@ -1,0 +1,47 @@
+name: loja-aurora
+
+services:
+  api:
+    build: ./api
+    image: loja-aurora-api
+    env_file: .env
+    environment:
+      # Fixed inside the network: n8n calls http://api:3000 regardless of the host port.
+      PORT: 3000
+      NODE_ENV: production
+    ports:
+      - '3000:3000'
+    healthcheck:
+      # Uses Node's built-in fetch, so the image needs no curl/wget.
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://localhost:3000/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:2.49.6
+    environment:
+      # Encrypts the credentials (Google OAuth) stored in the volume. Changing it later
+      # makes the saved credentials unreadable.
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:?Set N8N_ENCRYPTION_KEY in .env}
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-America/Sao_Paulo}
+      TZ: ${GENERIC_TIMEZONE:-America/Sao_Paulo}
+      # Public URL shown in the Webhook node (production and test URLs).
+      WEBHOOK_URL: http://localhost:5678/
+    ports:
+      - '5678:5678'
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  n8n_data:

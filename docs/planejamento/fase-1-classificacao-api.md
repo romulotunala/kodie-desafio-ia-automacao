@@ -17,29 +17,29 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 ## Checklist
 
 ### Bloco A — Fundação do repositório
-- [ ] `.nvmrc` com `24`
-- [ ] Estrutura de pastas conforme `01-arquitetura.md`
-- [ ] `.gitignore`, `.env.example`, `.editorconfig`
-- [ ] `api/`: `package.json` (npm, `"engines": { "node": ">=24" }`), `tsconfig.json` (strict), scripts `dev` (tsx watch), `build` (tsc), `start`, `test`, `lint`, `typecheck` (`tsc --noEmit`), `format`
-- [ ] ESLint (`typescript-eslint`, regras que reforcem os itens Sonar do `CLAUDE.md`) + Prettier
-- [ ] `config/env.ts` validando variáveis com Zod (falha rápido e com mensagem clara se faltar `GEMINI_API_KEY`)
+- [x] `.nvmrc` com `24`
+- [x] Estrutura de pastas conforme `01-arquitetura.md`
+- [x] `.gitignore`, `.env.example`, `.editorconfig`
+- [x] `api/`: `package.json` (npm, `"engines": { "node": ">=24" }`), `tsconfig.json` (strict), scripts `dev` (tsx watch), `build` (tsc), `start`, `test`, `lint`, `typecheck` (`tsc --noEmit`), `format`
+- [x] ESLint (`typescript-eslint`, regras que reforcem os itens Sonar do `CLAUDE.md`) + Prettier
+- [x] `config/env.ts` validando variáveis com Zod (falha rápido e com mensagem clara se faltar `GEMINI_API_KEY`)
 
 ### Bloco B — Esqueleto da API
-- [ ] `app.ts` (Express, `express.json` com limite, helmet, pino-http) e `server.ts`
-- [ ] `GET /health`
-- [ ] Middleware de validação Zod (`validate(schema)`)
-- [ ] `AppError` + middleware de erro com o envelope padrão + 404
-- [ ] Swagger: registry OpenAPI a partir do Zod, `GET /docs` (UI) e `GET /docs.json`
-- [ ] Teste: `/health` responde 200
+- [x] `app.ts` (Express, `express.json` com limite, helmet, pino-http) e `server.ts`
+- [x] `GET /health`
+- [x] Middleware de validação Zod (`validate(schema)`)
+- [x] `AppError` + middleware de erro com o envelope padrão + 404
+- [x] Swagger: registry OpenAPI a partir do Zod, `GET /docs` (UI) e `GET /docs.json`
+- [x] Teste: `/health` responde 200
 
 ### Bloco C — Integração com Gemini
-- [ ] `lib/gemini.ts` com `generateStructured<T>()` (saída JSON + schema, validação Zod, 1 retry, timeout, mapeamento de erros 502/503)
-- [ ] Testes unitários com o SDK mockado: sucesso · JSON inválido → retry → sucesso · falha dupla → 502 · timeout → 503
+- [x] `lib/gemini.ts` com `generateStructured<T>()` (saída JSON + schema, validação Zod, 1 retry, timeout, mapeamento de erros 502/503)
+- [x] Testes unitários com o SDK mockado: sucesso · JSON inválido → retry → sucesso · falha dupla → 502 · timeout → 503
 
 ### Bloco D — Módulo `classify`
-- [ ] `classify.constants.ts` (enums e limites)
-- [ ] `classify.schema.ts` (contrato da arquitetura, com descrições e exemplos para o Swagger)
-- [ ] `classify.prompt.ts` — system prompt estruturado com:
+- [x] `classify.constants.ts` (enums e limites)
+- [x] `classify.schema.ts` (contrato da arquitetura, com descrições e exemplos para o Swagger)
+- [x] `classify.prompt.ts` — system prompt estruturado com:
   - papel ("triage assistant for Loja Aurora")
   - definição de cada categoria e setor
   - regras de urgência e sentimento
@@ -47,27 +47,27 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
   - instrução explícita: textos livres (`summary`, `keywords`, `rationale`) em português do Brasil
   - 2–3 exemplos few-shot
   - mensagens ambíguas/spam → `other`, confiança baixa
-- [ ] `classify.service.ts` e `classify.route.ts` (`POST /api/v1/classify`), registrado no Swagger
-- [ ] Testes de rota (Supertest, Gemini mockado): 200 com envelope correto · 400 em entrada inválida · 502 quando a IA falha
-- [ ] `api/samples/messages.json` com ~12 mensagens realistas (em português) cobrindo todas as categorias, setores e urgências
-- [ ] Teste manual real (com chave) via Swagger; registrar no README um exemplo de requisição/resposta
+- [x] `classify.service.ts` e `classify.route.ts` (`POST /api/v1/classify`), registrado no Swagger
+- [x] Testes de rota (Supertest, Gemini mockado): 200 com envelope correto · 400 em entrada inválida · 502 quando a IA falha
+- [x] `api/samples/messages.json` com ~12 mensagens realistas (em português) cobrindo todas as categorias, setores e urgências
+- [x] Teste manual real (com chave) via Swagger; registrar no README um exemplo de requisição/resposta
 
 ### Bloco E — Docker
-- [ ] `api/Dockerfile` multi-stage (`node:24-alpine`, `npm ci`), usuário não-root, `.dockerignore`
-- [ ] `docker-compose.yml` com `api` + `n8n` (volume nomeado, timezone, encryption key, healthcheck da API)
-- [ ] `docker compose up --build` sobe tudo; `curl localhost:3000/health` ok; n8n abre em `localhost:5678`
+- [x] `api/Dockerfile` multi-stage (`node:24-alpine`, `npm ci`), usuário não-root, `.dockerignore`
+- [x] `docker-compose.yml` com `api` + `n8n` (volume nomeado, timezone, encryption key, healthcheck da API)
+- [x] `docker compose up --build` sobe tudo; `curl localhost:3000/health` ok; n8n abre em `localhost:5678`
 
 ### Bloco F — n8n + Google Sheets (parte manual do usuário, com apoio do Claude Code)
-- [ ] Usuário cria a planilha e a aba `classificacoes` com os cabeçalhos da arquitetura
-- [ ] Usuário configura a credencial Google Sheets no n8n (`docs/guias/google-sheets-n8n.md`)
-- [ ] Claude Code gera um rascunho de `n8n/workflows/4.1-classify.json` para importar:
+- [x] Usuário cria a planilha e a aba `classificacoes` com os cabeçalhos da arquitetura
+- [x] Usuário configura a credencial Google Sheets no n8n (`docs/guias/google-sheets-n8n.md`)
+- [x] Claude Code gera um rascunho de `n8n/workflows/4.1-classify.json` para importar:
   Webhook `POST /webhook/classify` → Edit Fields → HTTP Request `http://api:3000/api/v1/classify` → Edit Fields (enums → rótulos PT) → Google Sheets (Append Row) → Respond to Webhook, com ramo de erro
-- [ ] Usuário importa, liga a credencial, testa, **ativa** o workflow e reexporta o JSON final para `n8n/workflows/`
-- [ ] (Opcional) Switch por `urgency` para destacar mensagens de urgência alta
-- [ ] `scripts/send-samples.sh` (ou `.ts`) que envia `api/samples/messages.json` ao webhook — popula a planilha antes dos prints
+- [x] Usuário importa, liga a credencial, testa, **ativa** o workflow e reexporta o JSON final para `n8n/workflows/`
+- [x] (Opcional) Switch por `urgency` para destacar mensagens de urgência alta
+- [x] `scripts/send-samples.sh` (ou `.ts`) que envia `api/samples/messages.json` ao webhook — popula a planilha antes dos prints
 
 ### Bloco G — Documentação
-- [ ] `README.md` com as 6 seções obrigatórias (ver `00-desafio.md`) + extras:
+- [x] `README.md` com as 6 seções obrigatórias (ver `00-desafio.md`) + extras:
   - Arquitetura (diagrama Mermaid)
   - Endpoints e Swagger
   - Como a resposta da IA é garantida em JSON (structured output + Zod + retry)
@@ -77,13 +77,13 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
   - Documentação do fluxo n8n com prints e descrições
   - Estrutura de pastas
   - Próximos passos (fases opcionais)
-- [ ] `docs/adicionar-novo-caso.md` — passo a passo para criar um módulo novo
-- [ ] Placeholders de imagem no README apontando para `docs/prints/fase-1/`
+- [x] `docs/adicionar-novo-caso.md` — passo a passo para criar um módulo novo
+- [x] Placeholders de imagem no README apontando para `docs/prints/fase-1/`
 
 ### Bloco H — Prints (usuário) e fechamento
-- [ ] Usuário captura os prints da lista abaixo
-- [ ] Revisão final contra o checklist de `00-desafio.md`
-- [ ] Conferir que não há segredos no repositório (`git grep -iE "api_key|secret|token"`)
+- [x] Usuário captura os prints da lista abaixo
+- [x] Revisão final contra o checklist de `00-desafio.md`
+- [x] Conferir que não há segredos no repositório (`git grep -iE "api_key|secret|token"`)
 - [ ] Claude Code apresenta o resumo da fase e sugere título/descrição do PR; **o usuário** faz commit, push, PR, merge e tag `v1.0.0`
 
 ## Prints a capturar (salvar em `docs/prints/fase-1/`)
@@ -94,7 +94,7 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 | `02-node-webhook.png` | Configuração do Webhook (método, path, modo de resposta) |
 | `03-node-edit-fields.png` | Configuração do Edit Fields de entrada |
 | `04-node-http-request.png` | Configuração do HTTP Request (URL, método, body) |
-| `05-node-traducao.png` | Edit Fields que traduz enums para rótulos PT |
+| `05a-node-traducao.png` / `05b-node-traducao.png` | Edit Fields que traduz enums para rótulos PT (dois prints: 10 campos) |
 | `06-node-google-sheets.png` | Configuração do Sheets (planilha, aba, mapeamento de colunas) |
 | `07-node-respond.png` | Configuração do Respond to Webhook |
 | `08-execucao-sucesso.png` | Execução concluída com sucesso (todos os nodes verdes) |
@@ -102,6 +102,10 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 | `10-dados-sheets.png` | Dados que chegaram ao node do Sheets |
 | `11-planilha.png` | Planilha preenchida com várias mensagens classificadas |
 | `12-swagger.png` | Swagger com uma requisição e resposta reais |
+| `13-node-if-sucesso.png` | IF que separa a resposta 200 dos erros da API (ramo de erro) |
+| `14-node-switch.png` | Switch por urgência (saídas `Alta` e `Outras`) |
+| `15-node-respond-erro.png` | Respond to Webhook do ramo de erro, com uma execução real de 400 |
+| `16-planilha-urgentes.png` | Aba `urgentes` com as mensagens de urgência alta |
 
 ## Critérios de aceite
 
