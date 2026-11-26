@@ -50,7 +50,7 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 - [x] `classify.service.ts` e `classify.route.ts` (`POST /api/v1/classify`), registrado no Swagger
 - [x] Testes de rota (Supertest, Gemini mockado): 200 com envelope correto · 400 em entrada inválida · 502 quando a IA falha
 - [x] `api/samples/messages.json` com ~12 mensagens realistas (em português) cobrindo todas as categorias, setores e urgências
-- [ ] Teste manual real (com chave) via Swagger; registrar no README um exemplo de requisição/resposta
+- [x] Teste manual real (com chave) via Swagger; registrar no README um exemplo de requisição/resposta
 
 ### Bloco E — Docker
 - [x] `api/Dockerfile` multi-stage (`node:24-alpine`, `npm ci`), usuário não-root, `.dockerignore`
@@ -67,7 +67,7 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 - [x] `scripts/send-samples.sh` (ou `.ts`) que envia `api/samples/messages.json` ao webhook — popula a planilha antes dos prints
 
 ### Bloco G — Documentação
-- [ ] `README.md` com as 6 seções obrigatórias (ver `00-desafio.md`) + extras:
+- [x] `README.md` com as 6 seções obrigatórias (ver `00-desafio.md`) + extras:
   - Arquitetura (diagrama Mermaid)
   - Endpoints e Swagger
   - Como a resposta da IA é garantida em JSON (structured output + Zod + retry)
@@ -77,8 +77,8 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
   - Documentação do fluxo n8n com prints e descrições
   - Estrutura de pastas
   - Próximos passos (fases opcionais)
-- [ ] `docs/adicionar-novo-caso.md` — passo a passo para criar um módulo novo
-- [ ] Placeholders de imagem no README apontando para `docs/prints/fase-1/`
+- [x] `docs/adicionar-novo-caso.md` — passo a passo para criar um módulo novo
+- [x] Placeholders de imagem no README apontando para `docs/prints/fase-1/`
 
 ### Bloco H — Prints (usuário) e fechamento
 - [ ] Usuário captura os prints da lista abaixo
@@ -102,6 +102,10 @@ Lint + type-check + testes · diagnósticos do editor (Sonar) limpos nos arquivo
 | `10-dados-sheets.png` | Dados que chegaram ao node do Sheets |
 | `11-planilha.png` | Planilha preenchida com várias mensagens classificadas |
 | `12-swagger.png` | Swagger com uma requisição e resposta reais |
+| `13-node-if-sucesso.png` | IF que separa a resposta 200 dos erros da API (ramo de erro) |
+| `14-node-switch.png` | Switch por urgência (saídas `Alta` e `Outras`) |
+| `15-node-respond-erro.png` | Respond to Webhook do ramo de erro (status e corpo da API) |
+| `16-planilha-urgentes.png` | Aba `urgentes` com as mensagens de urgência alta |
 
 ## Critérios de aceite
 
